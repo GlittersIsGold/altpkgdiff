@@ -1,6 +1,5 @@
 package main
 
-
 import (
     "encoding/json"
     "fmt"
@@ -36,6 +35,19 @@ func main() {
     if err != nil {
         fmt.Println("Error generating JSON output:", err)
         os.Exit(1)
+    }
+
+    file, err := os.Create("altpckgdiff.txt");
+    if err != nil {
+        fmt.Println("An error occured while creating text file", err)
+    }
+
+    defer file.Close()
+
+    _, err = file.WriteString(string(output))
+    if err != nil {
+        fmt.Println("An erro occured while writing to the file", err)
+        return
     }
 
     fmt.Println(string(output))

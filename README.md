@@ -1,6 +1,6 @@
 # altpkgdiff
 
-A cli tool that will output a JSON structure that shows:
+A cli tool that output a JSON structure:
 
 - Packages only in `p10`.
 - Packages only in `sisyphus`.
@@ -8,6 +8,7 @@ A cli tool that will output a JSON structure that shows:
 
 ## Project structure
 
+```sh
 altpkgdiff/
 ├── api/
 │   └── client.go       # REST API interaction
@@ -17,7 +18,8 @@ altpkgdiff/
 │   └── diff.go         # Package diff funcs
 ├── go.mod              # Module
 ├── README.md           # Doc
-└── .gitignore          # ignoring files
+└── .gitignore          # list of ignoring files
+```
 
 ## Build
 
