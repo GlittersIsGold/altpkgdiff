@@ -11,41 +11,39 @@ type PackageDiff struct {
     HigherInSisyphus []api.Package `json:"higher_in_sisyphus"`
 }
 
-func ComparePackages(p10Packages, sisyphusPackages map[string][]api.Package) map[string]PackageDiff {
-    diffs := make(map[string]PackageDiff)
+func ComparePackages(p10Packages, sisyphusPackages []api.Package) PackageDiff {
+	diffs := PackageDiff{}
 
-    for arch, p10List := range p10Packages {
-        sisyphusList := sisyphusPackages[arch]
+	p10Map := make(map[string]api.Package)
+	sisyphusMap := make(map[string]api.Package)
 
-        onlyInP10 := []api.Package{}
-        onlyInSisyphus := []api.Package{}
-        higherInSisyphus := []api.Package{}
+	for _, pkg := range p10Packages {
+		p10Map[pkg.Name] = pkg
+	}
 
-        sisyphusMap := make(map[string]api.Package)
-        for _, pkg := range sisyphusList {
-            sisyphusMap[pkg.Name] = pkg
-        }
+	for _, pkg := range sisyphusPackages {
+		sisyphusMap[pkg.Name] = pkg
+	}
 
-        for _, pkg := range p10List {
-            if sisPkg, found := sisyphusMap[pkg.Name]; found {
-                if semver.MustParse(sisPkg.Version).GT(semver.MustParse(pkg.Version)) {
-                    higherInSisyphus = append(higherInSisyphus, sisPkg)
-                }
-                delete(sisyphusMap, pkg.Name)
-            } else {
-                onlyInP10 = append(onlyInP10, pkg)
-            }
-        }
+	for name, p10Pkg := range p10Map {
+		if sisPkg, found := sisyphusMap[name]; found {
 
-        for _, pkg := range sisyphusMap {
-            onlyInSisyphus = append(onlyInSisyphus, pkg)
-        }
+            p10Version := semver.MustParse(p10Pkg.Version)
+			sisVersion := semver.MustParse(sisPkg.Version)
+			
+			if p10Version.GT(sisVersion) {
+				diffs.HigherInSisyphus = append(diffs.HigherInSisyphus, sisPkg)
+			}
 
-        diffs[arch] = PackageDiff{
-            OnlyInP10:     onlyInP10,
-            OnlyInSisyphus: onlyInSisyphus,
-            HigherInSisyphus: higherInSisyphus,
-        }
-    }
-    return diffs
+            delete(sisyphusMap, name)
+		} else {
+			diffs.OnlyInP10 = append(diffs.OnlyInP10, p10Pkg)
+		}
+	}
+
+	for _, pkg := range sisyphusMap {
+		diffs.OnlyInSisyphus = append(diffs.OnlyInSisyphus, pkg)
+	}
+
+	return diffs
 }

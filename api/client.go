@@ -8,23 +8,39 @@ import (
 const baseUrl = "https://rdb.altlinux.org/api/export/branch_binary_packages/"
 
 type Package struct {
-	Name	string `json:"name"`
-	Version string `json:"version"`
-	Release string `json:"release"`
-	Arch 	string `json:"arch"`
+    Name     string `json:"name"`
+    Epoch    int    `json:"epoch"`
+    Version  string `json:"version"`
+    Release  string `json:"release"`
+    Arch     string `json:"arch"`
+    Disttag  string `json:"disttag"`
+    Buildtime int64 `json:"buildtime"`
+    Source   string `json:"source"`
 }
 
-func FetchPackages(branch string) (map[string][]Package, error) {
+type RequestArgs struct {
+    Arch *string `json:"arch"` // Используем указатель, чтобы отличить null от пустого значения
+}
+
+type ApiResponse struct {
+    RequestArgs RequestArgs `json:"request_args"`
+    Length      int        `json:"length"`
+    Packages    []Package  `json:"packages"`
+}
+
+func FetchPackages(branch string) (*ApiResponse, error) {
+
 	res, err := http.Get(baseUrl + branch)
 	if err != nil {
 		return nil, err
 	}
 	defer res.Body.Close()
 
-	var packages map[string][]Package
-	if err := json.NewDecoder(res.Body).Decode(&packages); err != nil {
-		return nil, err
-	} 
+	var response ApiResponse
 
-	return packages, nil
+	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
+		return nil, err
+	}
+
+	return &response, nil
 }
