@@ -26,28 +26,12 @@ func main() {
 
     p10Packages := p10_res.Packages;
 
-    fmt.Printf("N of sisy: %d\n", len(sisyphus_response.Packages))
-    fmt.Printf("N of p10: %d\n", len(p10_res.Packages))
-
-    diffs := pkg.ComparePackages(sisyphusPackages, p10Packages)
+    diffs := pkg.DiffPkgs(sisyphusPackages, p10Packages)
 
     output, err := json.MarshalIndent(diffs, "", "  ")
     if err != nil {
         fmt.Println("Error generating JSON output:", err)
         os.Exit(1)
-    }
-
-    file, err := os.Create("altpckgdiff.txt");
-    if err != nil {
-        fmt.Println("An error occured while creating text file", err)
-    }
-
-    defer file.Close()
-
-    _, err = file.WriteString(string(output))
-    if err != nil {
-        fmt.Println("An erro occured while writing to the file", err)
-        return
     }
 
     fmt.Println(string(output))
