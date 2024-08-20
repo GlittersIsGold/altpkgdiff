@@ -19,7 +19,7 @@ type Package struct {
 }
 
 type RequestArgs struct {
-    Arch *string `json:"arch"` // Используем указатель, чтобы отличить null от пустого значения
+    Arch *string `json:"arch"` 
 }
 
 type ApiResponse struct {

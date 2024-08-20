@@ -2,6 +2,7 @@ package main
 
 import (
     "encoding/json"
+    "bufio"
     "fmt"
     "os"
 
@@ -35,4 +36,10 @@ func main() {
     }
 
     fmt.Println(string(output))
+    
+    fmt.Print("Press enter to exit")
+    reader := bufio.NewReader(os.Stdin)
+    _, _ = reader.ReadString('\n') // 
+
+    fmt.Println("Key pressed")
 }

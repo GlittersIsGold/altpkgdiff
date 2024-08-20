@@ -23,12 +23,35 @@ altpkgdiff/
 
 ## Build
 
+set `GOOS` & `GOARCH` to your target platform
+
+```pwsh
+$env:GOOS="linux"
+$env:GOARCH="amd64" 
+```
+
+run build script
+
 ```sh
-go build -o altpkgdiff ./cmd
+go build -o altpckgdiff .\cmd\main.go
 ```
 
 ## Use
 
+make file executable
+
 ```sh
-./altpkgdiff
+chmod +x altpckgdiff
+```
+
+execute programm
+
+```pwsh
+./altpckdiff
+```
+
+save results to txt
+
+```sh
+./altpkgdiff > output.txt
 ```
