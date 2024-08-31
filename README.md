@@ -47,11 +47,11 @@ chmod +x altpckgdiff
 execute programm
 
 ```pwsh
-./altpckdiff
+./altpckgdiff -dst p10 -src sisyphus
 ```
 
 save results to txt
 
 ```sh
-./altpkgdiff > output.txt
+./altpckgdiff -dst p10 -src sisyphus > out.txt
 ```

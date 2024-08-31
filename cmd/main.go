@@ -3,6 +3,7 @@ package main
 import (
     "encoding/json"
     "bufio"
+    "flag"
     "fmt"
     "os"
 
@@ -11,23 +12,35 @@ import (
 )
 
 func main() {
+
+    src := flag.String("src","","sisyphus");
+    dst := flag.String("dst","","p10");
+
+    flag.Parse()
+
+    if *src == "" || *dst == "" {
+        fmt.Println("Both flags -src & -dst should be used.")
+        flag.Usage() // Выводит справочную информацию о флагах
+        os.Exit(1)
+    }
     
-    sisyphus_response, err := api.FetchPackages("sisyphus")
+    srsResponce, err := api.FetchPackages(*src)
     if err != nil {
-        fmt.Println("Error fetching sisyphus packages:", err)
+        fmt.Printf("Error fetching packages for %s: %v\n", *src, err)
         os.Exit(1)
     }
-    sisyphusPackages := sisyphus_response.Packages;
+    
+    srsPackages := srsResponce.Packages;
 
-    p10_res, err := api.FetchPackages("p10")
+    dstRespone, err := api.FetchPackages(*dst)
     if err != nil {
-        fmt.Println("Error fetching p10 packages:", err)
+        fmt.Printf("Error fetching packages for %s: %v\n", *dst, err)
         os.Exit(1)
     }
 
-    p10Packages := p10_res.Packages;
+    dstPackages := dstRespone.Packages;
 
-    diffs := pkg.DiffPkgs(sisyphusPackages, p10Packages)
+    diffs := pkg.DiffPkgs(srsPackages, dstPackages)
 
     output, err := json.MarshalIndent(diffs, "", "  ")
     if err != nil {
@@ -39,7 +52,7 @@ func main() {
     
     fmt.Print("Press enter to exit")
     reader := bufio.NewReader(os.Stdin)
-    _, _ = reader.ReadString('\n') // 
+    _, _ = reader.ReadString('\n') 
 
     fmt.Println("Key pressed")
 }
