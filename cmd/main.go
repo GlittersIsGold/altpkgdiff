@@ -20,17 +20,17 @@ func main() {
 
     if *src == "" || *dst == "" {
         fmt.Println("Both flags -src & -dst should be used.")
-        flag.Usage() // Выводит справочную информацию о флагах
+        flag.Usage() 
         os.Exit(1)
     }
     
-    srsResponce, err := api.FetchPackages(*src)
+    srcResponce, err := api.FetchPackages(*src)
     if err != nil {
         fmt.Printf("Error fetching packages for %s: %v\n", *src, err)
         os.Exit(1)
     }
     
-    srsPackages := srsResponce.Packages;
+    srcPackages := srcResponce.Packages;
 
     dstRespone, err := api.FetchPackages(*dst)
     if err != nil {
@@ -40,7 +40,7 @@ func main() {
 
     dstPackages := dstRespone.Packages;
 
-    diffs := pkg.DiffPkgs(srsPackages, dstPackages)
+    diffs := pkg.DiffPkgs(srcPackages, dstPackages)
 
     output, err := json.MarshalIndent(diffs, "", "  ")
     if err != nil {

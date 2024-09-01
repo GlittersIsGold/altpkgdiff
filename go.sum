@@ -1,2 +1,4 @@
 github.com/blang/semver/v4 v4.0.0 h1:1PFHFE6yCCTv8C1TeyNNarDzntLi7wMI5i/pzqYIsAM=
 github.com/blang/semver/v4 v4.0.0/go.mod h1:IbckMUScFkM3pff0VJDNKRiT6TG/YpiHIM2yvyW5YoQ=
+github.com/knqyf263/go-rpm-version v0.0.0-20220614171824-631e686d1075 h1:aC6MEAs3PE3lWD7lqrJfDxHd6hcced9R4JTZu85cJwU=
+github.com/knqyf263/go-rpm-version v0.0.0-20220614171824-631e686d1075/go.mod h1:i4sF0l1fFnY1aiw08QQSwVAFxHEm311Me3WsU/X7nL0=
