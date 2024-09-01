@@ -16,9 +16,17 @@ altpkgdiff/
 │   └── main.go         # CLI logic here
 ├── pkg/
 │   └── diff.go         # Package diff funcs
+├── test/
+│   └── diff_test.go    # test funcs
 ├── go.mod              # Module
 ├── README.md           # Doc
 └── .gitignore          # list of ignoring files
+```
+
+## Test
+
+```sh
+go test -v .\test\diff_test.go     
 ```
 
 ## Build
