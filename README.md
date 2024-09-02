@@ -17,10 +17,10 @@ altpkgdiff/
 ├── pkg/
 │   └── diff.go         # Package diff funcs
 ├── test/
-│   └── diff_test.go    # test funcs
+│   └── diff_test.go    # test funcs for comparing
 ├── go.mod              # Module
 ├── README.md           # Doc
-└── .gitignore          # list of ignoring files
+└── .gitignore          # List of ignoring files
 ```
 
 ## Test
@@ -54,12 +54,20 @@ chmod +x altpckgdiff
 
 execute programm
 
+compare repositories in two branches
+
 ```pwsh
 ./altpckgdiff -dst p10 -src sisyphus
 ```
 
+compare repositories in two branches for the specified architecture
+
+```pwsh
+./altpckgdiff -dst p10 -src sisyphus -arch aarch64
+```
+
 save results to txt
 
-```sh
+```pwsh
 ./altpckgdiff -dst p10 -src sisyphus > out.txt
 ```

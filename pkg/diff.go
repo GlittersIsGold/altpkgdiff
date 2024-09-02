@@ -8,45 +8,45 @@ import (
 )
 
 type PackageDiff struct {
-	OnlyInP10        map[string][]api.Package `json:"only_in_p10"`
-	OnlyInSisyphus   map[string][]api.Package `json:"only_in_sisyphus"`
-	HigherInSisyphus map[string][]api.Package `json:"higher_in_sisyphus"`
+	OnlyInDst        map[string][]api.Package `json:"only_in_dst"`
+	OnlyInSrc   map[string][]api.Package `json:"only_in_src"`
+	HigherInSrc map[string][]api.Package `json:"higher_in_src"`
 }
 
 func DiffPkgs(sisyphusPackages, p10Packages []api.Package) PackageDiff {
 	
 	diffs := PackageDiff{
-		OnlyInP10:        make(map[string][]api.Package),
-		OnlyInSisyphus:   make(map[string][]api.Package),
-		HigherInSisyphus: make(map[string][]api.Package),
+		OnlyInDst:        make(map[string][]api.Package),
+		OnlyInSrc:   make(map[string][]api.Package),
+		HigherInSrc: make(map[string][]api.Package),
 	}
 
-	sisyphusMap := make(map[string]api.Package)
-	p10Map := make(map[string]api.Package)
+	srcMap := make(map[string]api.Package)
+	dstMap := make(map[string]api.Package)
 
 	for _, pkg := range sisyphusPackages {
 		key := pkg.Name + ":" + pkg.Arch
-		sisyphusMap[key] = pkg
+		srcMap[key] = pkg
 	}
 
 	for _, pkg := range p10Packages {
 		key := pkg.Name + ":" + pkg.Arch
-		p10Map[key] = pkg
+		dstMap[key] = pkg
 	}
 
-	for key, p10Pkg := range p10Map {
-		if sisPkg, found := sisyphusMap[key]; found {
-			if CmpPkgVers(sisPkg, p10Pkg) > 0 {
-				diffs.HigherInSisyphus[sisPkg.Arch] = append(diffs.HigherInSisyphus[sisPkg.Arch], sisPkg)
+	for key, dstPkg := range dstMap {
+		if srcPkg, found := srcMap[key]; found {
+			if CmpPkgVers(srcPkg, dstPkg) > 0 {
+				diffs.HigherInSrc[srcPkg.Arch] = append(diffs.HigherInSrc[srcPkg.Arch], srcPkg)
 			}
-			delete(sisyphusMap, key)
+			delete(srcMap, key)
 		} else {
-			diffs.OnlyInP10[p10Pkg.Arch] = append(diffs.OnlyInP10[p10Pkg.Arch], p10Pkg)
+			diffs.OnlyInDst[dstPkg.Arch] = append(diffs.OnlyInDst[dstPkg.Arch], dstPkg)
 		}
 	}
 
-	for _, pkg := range sisyphusMap {
-		diffs.OnlyInSisyphus[pkg.Arch] = append(diffs.OnlyInSisyphus[pkg.Arch], pkg)
+	for _, pkg := range srcMap {
+		diffs.OnlyInSrc[pkg.Arch] = append(diffs.OnlyInSrc[pkg.Arch], pkg)
 	}
 
 	return diffs
@@ -62,4 +62,14 @@ func CreateVersion(pkg api.Package) rpmv.Version {
     vStr := fmt.Sprintf("%d:%s-%s", pkg.Epoch, pkg.Version, pkg.Release)
     v := rpmv.NewVersion(vStr)
 	return v;
+}
+
+func FilterByArch(packages []api.Package, arch string) []api.Package {
+    var filtered []api.Package
+    for _, p := range packages {
+        if p.Arch == arch {
+            filtered = append(filtered, p)
+        }
+    }
+    return filtered
 }

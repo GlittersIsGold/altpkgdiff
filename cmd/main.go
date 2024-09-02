@@ -13,8 +13,9 @@ import (
 
 func main() {
 
-    src := flag.String("src","","sisyphus");
-    dst := flag.String("dst","","p10");
+    src := flag.String("src","","Source branch name \nExample: -src sisyphus");
+    dst := flag.String("dst","","Destination branch name \nExmample: -dst p10");
+    arch := flag.String("arch","","Optional flag for comparing packages within the architecture \nExample: -a aarch64");
 
     flag.Parse()
 
@@ -40,6 +41,11 @@ func main() {
 
     dstPackages := dstRespone.Packages;
 
+    if *arch != "" {
+        srcPackages = pkg.FilterByArch(srcPackages, *arch)
+        dstPackages = pkg.FilterByArch(dstPackages, *arch)
+    }
+
     diffs := pkg.DiffPkgs(srcPackages, dstPackages)
 
     output, err := json.MarshalIndent(diffs, "", "  ")
@@ -51,6 +57,7 @@ func main() {
     fmt.Println(string(output))
     
     fmt.Print("Press enter to exit")
+    
     reader := bufio.NewReader(os.Stdin)
     _, _ = reader.ReadString('\n') 
 
